@@ -15,6 +15,12 @@ namespace eShopSolution.Data.Entities
         public DateTime DataCreated { set; get; }
   
         public string SeoAlias { set; get; }
+        public List<ProductInCategory> ProductInCategories { get; set; }
 
+        public List<OrderDetail> OrderDetails { get; set; }
+
+        public List<Cart> Carts { get; set; }
+
+        public List<ProductTranslation> ProductTranslations { get; set; }
     }
 }
