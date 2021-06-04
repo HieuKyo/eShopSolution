@@ -5,15 +5,12 @@ namespace eShopSolution.Data.Migrations
 {
     public partial class Initial : Migration
     {
-
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                //App tạo ra bảng Config
                 name: "AppConfigs",
                 columns: table => new
                 {
-                    //2 thằng này đều null able
                     Key = table.Column<string>(nullable: false),
                     Value = table.Column<string>(nullable: false)
                 },
@@ -30,7 +27,7 @@ namespace eShopSolution.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     SortOrder = table.Column<int>(nullable: false),
                     IsShowOnHome = table.Column<bool>(nullable: false),
-                    ParentID = table.Column<int>(nullable: true),
+                    ParentId = table.Column<int>(nullable: true),
                     Status = table.Column<int>(nullable: false, defaultValue: 1)
                 },
                 constraints: table =>
@@ -63,7 +60,6 @@ namespace eShopSolution.Data.Migrations
                     Name = table.Column<string>(maxLength: 20, nullable: false),
                     IsDefault = table.Column<bool>(nullable: false)
                 },
-                //Khoá chính là Id
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Languages", x => x.Id);
@@ -75,7 +71,7 @@ namespace eShopSolution.Data.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    OrderDate = table.Column<DateTime>(nullable: false, defaultValue: new DateTime(2021, 6, 4, 10, 6, 8, 24, DateTimeKind.Local).AddTicks(4407)),
+                    OrderDate = table.Column<DateTime>(nullable: false, defaultValue: new DateTime(2020, 1, 29, 21, 20, 57, 232, DateTimeKind.Local).AddTicks(9768)),
                     UserId = table.Column<Guid>(nullable: false),
                     ShipName = table.Column<string>(maxLength: 200, nullable: false),
                     ShipAddress = table.Column<string>(maxLength: 200, nullable: false),
@@ -98,7 +94,7 @@ namespace eShopSolution.Data.Migrations
                     OriginalPrice = table.Column<decimal>(nullable: false),
                     Stock = table.Column<int>(nullable: false, defaultValue: 0),
                     ViewCount = table.Column<int>(nullable: false, defaultValue: 0),
-                    DataCreated = table.Column<DateTime>(nullable: false),
+                    DateCreated = table.Column<DateTime>(nullable: false),
                     SeoAlias = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -137,7 +133,7 @@ namespace eShopSolution.Data.Migrations
                     ExternalTransactionId = table.Column<string>(nullable: true),
                     Amount = table.Column<decimal>(nullable: false),
                     Fee = table.Column<decimal>(nullable: false),
-                    Reuslt = table.Column<string>(nullable: true),
+                    Result = table.Column<string>(nullable: true),
                     Message = table.Column<string>(nullable: true),
                     Status = table.Column<int>(nullable: false),
                     Provider = table.Column<string>(nullable: true)
@@ -162,7 +158,6 @@ namespace eShopSolution.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    //Có 2 khoá ngoại, đến language và categories
                     table.PrimaryKey("PK_CategoryTranslations", x => x.Id);
                     table.ForeignKey(
                         name: "FK_CategoryTranslations_Categories_CategoryId",
