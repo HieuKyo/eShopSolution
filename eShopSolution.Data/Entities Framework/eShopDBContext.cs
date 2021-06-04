@@ -15,8 +15,10 @@ namespace eShopSolution.Data.Entities_Framework
         {
         
         }
+        //Phương thức OnModelCreating giúp ta làm 1 số việc khi tạo DbContext
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //Config = Fluent API
             modelBuilder.ApplyConfiguration(new CartConfiguration());
 
             modelBuilder.ApplyConfiguration(new AppConfigConfiguration());
@@ -36,6 +38,8 @@ namespace eShopSolution.Data.Entities_Framework
             //base.OnModelCreating(modelBuilder);
         }
         //Tên thuộc tính với DbSet thì phải chữ hoa và số nhièu
+        //Quản lý object, table thông qua các Proxy thành các class trong C#
+        //Mọi Config đều nằm trong DbSet
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<AppConfig> AppConfigs { get; set; }

@@ -15,6 +15,8 @@ namespace eShopSolution.Data.Configurations
 
             builder.ToTable("ProductInCategories");
 
+            //Liên kết khoá ngoại từ Product Category đến Product
+            //Có 1 thằng Product, liên kết với nhiều thằng ProductInCategory bằng cái pc.ProductId  
             builder.HasOne(t => t.Product).WithMany(pc => pc.ProductInCategories)
                 .HasForeignKey(pc => pc.ProductId);
 
