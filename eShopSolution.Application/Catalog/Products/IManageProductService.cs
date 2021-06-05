@@ -1,4 +1,5 @@
 ﻿using eShopSolution.Application.Catalog.Products.DTOS;
+using eShopSolution.Application.Catalog.Products.DTOS.Manage;
 using eShopSolution.Application.DTOS;
 using System;
 using System.Collections.Generic;
@@ -21,12 +22,19 @@ namespace eShopSolution.Application.Catalog.Products
         //Trả về kiểu int là mã sản phẩm
         Task<int> Create(ProductCreateRequest request);
         //Dùng Task - SaveChangesAsync để tận dụng được nhiều Thread 1 lúc
-        Task<int> Update(ProductEditRequest request);
+        Task<int> Update(ProductUpdateRequest request);
 
         Task<int> Delete(int productId);
+
+        //THêm các phương thức
+        Task<bool> UpdatePrice(int productId, decimal newPrice);
+        Task<bool> UpdateStock(int productId, int addedQuantity);
+        Task AddViewCount(int productId);
+
         //Add về 1 cái List
         Task<List <ProductViewModel>> GetAll();
         //Truyền vào 1 số request, keyword để tìm kiếm, stt trang, và pagesize để phân trang
-        Task<PagedViewModel <ProductViewModel>> GetAllPaging(string keyword, int pageIndex, int pageSize);
+        //bằng class GetProductPaging Request
+        Task<PagedResult <ProductViewModel>> GetAllPaging(GetProductPagingRequest request);
     }
 }
