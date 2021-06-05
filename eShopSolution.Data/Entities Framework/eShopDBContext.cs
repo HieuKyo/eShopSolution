@@ -1,6 +1,8 @@
 ﻿using eShopSolution.Data.Configurations;
 using eShopSolution.Data.Entities;
 using eShopSolution.Data.Extensions;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,7 +11,9 @@ using System.Text;
 namespace eShopSolution.Data.Entities_Framework
 {
     // Cái : là kế thừa (Kế thừa từ FrameworkCore)
-    public class eShopDBContext : DbContext
+    // DBContext kế thừa từ Identity nên nó sẽ có kèm theo 3 thuộc tính
+    // User, Role, String
+    public class eShopDBContext : IdentityDbContext <AppUser,AppRole,Guid>
     {
         //Được gợi ý truyền vào DbContexOption
         public eShopDBContext(DbContextOptions options) : base(options)
@@ -36,6 +40,20 @@ namespace eShopSolution.Data.Entities_Framework
             modelBuilder.ApplyConfiguration(new ProductTranslationConfiguration());
             modelBuilder.ApplyConfiguration(new PromotionConfiguration());
             modelBuilder.ApplyConfiguration(new TransactionConfiguration());
+
+            modelBuilder.ApplyConfiguration(new AppUserConfiguration());
+            modelBuilder.ApplyConfiguration(new AppRoleConfiguration());
+
+            //Config = Identity - tạo migration ASP.Net core Identity database
+            modelBuilder.Entity<IdentityUserClaim<Guid>>().ToTable("AppUserClaims");
+            //UserRole này có 2 key nên là phải xài ngoặc nhọn, Ctrl Chuột phải để coi key
+            modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("AppUserRoles").HasKey(x => new {x.UserId,x.RoleId });
+            //UserLogin này cần 1 khoá chính, là Haskey -> key nó là 
+            modelBuilder.Entity<IdentityUserLogin<Guid>>().ToTable("AppUserLogins").HasKey(x => x.UserId);
+
+            modelBuilder.Entity<IdentityRoleClaim<Guid>>().ToTable("AppRoleClaims");
+            //UserToken
+            modelBuilder.Entity<IdentityUserToken<Guid>>().ToTable("AppUserTokens").HasKey(x => x.UserId);
 
             //Data seeding
             modelBuilder.Seed();
