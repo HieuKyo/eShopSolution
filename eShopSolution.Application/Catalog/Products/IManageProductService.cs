@@ -32,7 +32,7 @@ namespace eShopSolution.Application.Catalog.Products
         Task AddViewCount(int productId);
 
         //Add về 1 cái List
-        Task<List <ProductViewModel>> GetAll();
+    
         //Truyền vào 1 số request, keyword để tìm kiếm, stt trang, và pagesize để phân trang
         //bằng class GetProductPaging Request
         Task<PagedResult <ProductViewModel>> GetAllPaging(GetProductPagingRequest request);
