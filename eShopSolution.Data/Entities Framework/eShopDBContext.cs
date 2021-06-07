@@ -40,9 +40,10 @@ namespace eShopSolution.Data.Entities_Framework
             modelBuilder.ApplyConfiguration(new ProductTranslationConfiguration());
             modelBuilder.ApplyConfiguration(new PromotionConfiguration());
             modelBuilder.ApplyConfiguration(new TransactionConfiguration());
-
             modelBuilder.ApplyConfiguration(new AppUserConfiguration());
             modelBuilder.ApplyConfiguration(new AppRoleConfiguration());
+            //7/6 Khai báo Config ProductImage
+            modelBuilder.ApplyConfiguration(new ProductImageConfiguration());
 
             //Config = Identity - tạo migration ASP.Net core Identity database
             modelBuilder.Entity<IdentityUserClaim<Guid>>().ToTable("AppUserClaims");
@@ -76,5 +77,6 @@ namespace eShopSolution.Data.Entities_Framework
         public DbSet<ProductTranslation> ProductTranslations { get; set; }
         public DbSet<Promotion> Promotions { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<ProductImage> ProductImages { get; set; }
     }
 }
