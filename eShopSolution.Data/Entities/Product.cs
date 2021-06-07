@@ -21,6 +21,8 @@ namespace eShopSolution.Data.Entities
         public List<Cart> Carts { get; set; }
 
         public List<ProductTranslation> ProductTranslations { get; set; }
+        // 6/7 Product Image
+        public List<ProductImage> ProductImages { get; set; }
 
     }
 }
