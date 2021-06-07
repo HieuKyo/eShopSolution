@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace eShopSolution.Application.Catalog.Products.DTOS
+namespace eShopSolution.ViewModels.Catalog.Products
 {
     public class ProductViewModel
     {
