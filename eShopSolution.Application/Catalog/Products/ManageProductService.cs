@@ -4,7 +4,7 @@ using eShopSolution.Data.Entities;
 using eShopSolution.Data.Entities_Framework;
 using eShopSolution.Utilities.Exceptions;
 using eShopSolution.ViewModels.Catalog.Products;
-using eShopSolution.ViewModels.Catalog.Products.Manage;
+
 using eShopSolution.ViewModels.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -100,12 +100,12 @@ namespace eShopSolution.Application.Catalog.Products
         {
             var product = await _context.Products.FindAsync(productId);
             if (product == null) throw new eShopException($"Can't find a product: {productId}");
-             
-            var images =  _context.ProductImages.Where(i => i.ProductId == productId);
-            
-            
+
+            var images = _context.ProductImages.Where(i => i.ProductId == productId);
+
+
             //Chúng ta sẽ foreach nó qua 1 loạt, nếu mà có 
-            foreach(var image in images)
+            foreach (var image in images)
             {
                 await _storageService.DeleteFileAsync(image.ImagePath);
             }
@@ -115,7 +115,7 @@ namespace eShopSolution.Application.Catalog.Products
         }
 
         //Phương thức GetPaging
-        public async Task<PagedResult<ProductViewModel>> GetAllPaging(GetProductPagingRequest request)
+        public async Task<PagedResult<ProductViewModel>> GetAllPaging(GetManageProductPagingRequest request)
         {
             //Dùng cách query trong LinQ dễ hơn
             //1. Select join
@@ -172,7 +172,7 @@ namespace eShopSolution.Application.Catalog.Products
             return pageResult;
         }
 
-        public Task<List<ViewModels.Catalog.Products.ProductImageViewModel>> GetListImage(int productId)
+        public Task<List<ProductImageViewModel>> GetListImage(int productId)
         {
             throw new NotImplementedException();
         }
@@ -245,6 +245,5 @@ namespace eShopSolution.Application.Catalog.Products
             await _storageService.SaveFileAsync(file.OpenReadStream(), fileName);
             return fileName;
         }
-
     }
 }
