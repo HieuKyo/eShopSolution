@@ -1,10 +1,13 @@
 ﻿using eShopSolution.Application.Catalog.Products;
 using eShopSolution.Application.Common;
+using eShopSolution.Application.System.Users;
+using eShopSolution.Data.Entities;
 using eShopSolution.Data.Entities_Framework;
 using eShopSolution.Utilities.Constants;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,8 +34,13 @@ namespace eShopSolution.BackendApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<eShopDBContext>(option => option.UseSqlServer(Configuration.GetConnectionString(SystemConstants.MainConnectionString)));
-
+            services.AddDbContext<eShopDBContext>(option => 
+                option.UseSqlServer(Configuration.GetConnectionString(SystemConstants.MainConnectionString)));
+            
+            //Nó sẽ tự register cho chúng ta tất cả các Store bên dưới
+            services.AddIdentity<AppUser, AppRole>()
+                .AddEntityFrameworkStores<eShopDBContext>()
+                .AddDefaultTokenProviders();
             //Khai báo DI, đối với thằng IManageProduct thì nó sẽ chạy ra gì
             //AddTransient - mỗi lần request thì nó sẽ tạo mới
             //Nó sẽ chỉ cho thằng DI biết là
@@ -41,6 +49,10 @@ namespace eShopSolution.BackendApi
             //Cứ instance kiểu IStorageService thì sẽ tạo ra 1 instance FileStorageService
             services.AddTransient<IStorageService, FileStorageService>();
             services.AddTransient<IManageProductService, ManageProductService>();
+            services.AddTransient<UserManager<AppUser>, UserManager<AppUser>>();
+            services.AddTransient<SignInManager<AppUser>, SignInManager<AppUser>>();
+            services.AddTransient<RoleManager<AppRole>, RoleManager<AppRole>>();
+            services.AddTransient<IUserService, UserService>();
 
             services.AddControllersWithViews();
             //Tạo phương thức Swagger rồi sử dụng ở bên dưới
