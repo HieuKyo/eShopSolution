@@ -9,8 +9,6 @@ namespace eShopSolution.Application.Catalog.Products
     //Phần này bên ngoài, cho khách hàng đọc
     public interface IPublicProductService
     {
-        Task <PagedResult<ProductViewModel>> GetAllByCategoryId(GetPublicProductPagingRequest request);
-        //Lấy list sản phẩm ra
-        Task<List<ProductViewModel>> GetAll(string languageId);
+        Task <PagedResult<ProductViewModel>> GetAllByCategoryId(string languageId, GetPublicProductPagingRequest request);
     }
 }
