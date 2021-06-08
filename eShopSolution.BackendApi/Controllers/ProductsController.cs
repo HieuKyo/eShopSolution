@@ -1,5 +1,6 @@
 ﻿
 using eShopSolution.Application.Catalog.Products;
+using eShopSolution.ViewModels.Catalog.ProductImages;
 using eShopSolution.ViewModels.Catalog.Products;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -119,6 +120,71 @@ namespace eShopSolution.BackendApi.Controllers
             if (affectedResult == 0)   //Không tạo được gì
                 return BadRequest(); //Lỗi 404
             return Ok();
+        }
+
+        //Create Images
+        [HttpPost("{productId}/images")]
+        //Do thằng này là post nên Port sẽ là FromForm
+        public async Task<IActionResult> CreateImage(int productId, [FromForm] ProductImageCreateRequest request)
+        {
+            //Kiểm tra valid của thằng này có Ok k
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            //Post thì sẽ k có alias gì cả
+            //sẽ có result trả về
+            var imageId = await _manageProductService.AddImage(productId, request);
+            if (imageId == 0)   //Không tạo được gì
+                return BadRequest(); //Lỗi 404
+
+            var image = await _manageProductService.GetImageById(imageId);
+            //Created là trạng thái 201 trả về 1 URL và 1 object
+            //Sau khi nhận về, truyền vào 1 đường dẫn
+            //GetById là url
+            //return Created(nameof(GetById), product);
+            return CreatedAtAction(nameof(GetImageById), new { id = imageId }, image);
+        }
+
+        //Update Images
+        [HttpPut("{productId}/images/{imageId}")]
+        //Do thằng này là post nên Port sẽ là FromForm
+        public async Task<IActionResult> UpdateImage(int imageId, [FromForm] ProductImageUpdateRequest request)
+        {
+            //Kiểm tra valid của thằng này có Ok k
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            //Post thì sẽ k có alias gì cả
+            //sẽ có result trả về
+            var result = await _manageProductService.UpdateImage(imageId, request);
+            if (result == 0)   //Không tạo được gì
+                return BadRequest(); //Lỗi 404
+            return Ok();    //Ok object Result
+        }
+
+        //Delete Images
+        [HttpDelete("{productId}/images/{imageId}")]
+        public async Task<IActionResult> RemoveImage(int imageId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var result = await _manageProductService.RemoveImage(imageId);
+            if (result == 0)   //Không tạo được gì
+                return BadRequest(); //Lỗi 404
+            return Ok();    //Ok object Result
+        }
+
+        [HttpGet("{productId}/images/{imageId}")]   //Tên đặt trên này phải trùng với cái ở dưới
+        public async Task<IActionResult> GetImageById(int productId, int imageId)
+        {
+            var image = await _manageProductService.GetImageById(imageId);
+            if (image == null)
+                return BadRequest("Cannot find productt");
+            return Ok(image);
         }
     }
 }
