@@ -1,4 +1,5 @@
 ﻿using eShopSolution.Application.Catalog.Products;
+using eShopSolution.Application.Common;
 using eShopSolution.Data.Entities_Framework;
 using eShopSolution.Utilities.Constants;
 using Microsoft.AspNetCore.Builder;
@@ -37,6 +38,9 @@ namespace eShopSolution.BackendApi
             //Nó sẽ chỉ cho thằng DI biết là
             //Nếu chúng ta yêu cầu 1 đối tượng IPublicProductService thì nó sẽ instance về cho ta 1 đối tượng của class PublicProductService
             services.AddTransient<IPublicProductService, PublicProductService>();
+            //Cứ instance kiểu IStorageService thì sẽ tạo ra 1 instance FileStorageService
+            services.AddTransient<IStorageService, FileStorageService>();
+            services.AddTransient<IManageProductService, ManageProductService>();
 
             services.AddControllersWithViews();
             //Tạo phương thức Swagger rồi sử dụng ở bên dưới
