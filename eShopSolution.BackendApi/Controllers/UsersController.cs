@@ -35,7 +35,8 @@ namespace eShopSolution.BackendApi.Controllers
             {
                 return BadRequest("UserName or password is incorrect!");
             }
-            return Ok(new { token = resultToken});
+            //Trả về luôn 1 token để dễ lấy
+            return Ok(resultToken);
         }
 
         [HttpPost("register")]

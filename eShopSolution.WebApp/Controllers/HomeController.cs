@@ -21,6 +21,8 @@ namespace eShopSolution.WebApp.Controllers
 
         public IActionResult Index()
         {
+            //Lấy ra được UserName đăng nhập
+            var user = User.Identity.Name;
             return View();
         }
 

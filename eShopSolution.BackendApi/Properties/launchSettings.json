@@ -17,6 +17,7 @@
     },
     "eShopSolution.BackendApi": {
       "commandName": "Project",
+      //k cần show swagger lên test nữa
       "launchBrowser": true,
       //Chạy 1 cái là vào swagger luôn
       "launchUrl": "swagger",

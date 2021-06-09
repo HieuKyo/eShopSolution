@@ -19,8 +19,11 @@ namespace eShopSolution.Application.System.Users
         private readonly RoleManager<AppRole> _roleManager;
         private readonly IConfiguration _config;
         //Để login dc thì ta cần phải injact cái thằng UserManager, SignInManager. Đây là thư viện của Identity
-        public UserService(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, 
-            RoleManager<AppRole> roleManager, IConfiguration config)
+        public UserService(
+            UserManager<AppUser> userManager, 
+            SignInManager<AppUser> signInManager, 
+            RoleManager<AppRole> roleManager, 
+            IConfiguration config)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -46,14 +49,16 @@ namespace eShopSolution.Application.System.Users
             {
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.GivenName, user.FirstName),
-                new Claim(ClaimTypes.Role, string.Join(";",roles))
+                new Claim(ClaimTypes.Role, string.Join(";",roles)),
+                new Claim(ClaimTypes.Name, request.UserName)
                 //Muốn lấy nhiều hơn cũng dc
             };
             //Sau khi có Claim rồi thì ta đi mã hoá các Claims đó 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var token = new JwtSecurityToken(_config["Token:Issuser"],
-                _config["Token:Issuser"],
+
+            var token = new JwtSecurityToken(_config["Tokens:Issuer"],
+                _config["Tokens:Issuer"],
                 claims,
                 expires: DateTime.Now.AddHours(3),
                 signingCredentials: creds);
