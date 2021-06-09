@@ -4,6 +4,8 @@ using eShopSolution.Application.System.Users;
 using eShopSolution.Data.Entities;
 using eShopSolution.Data.Entities_Framework;
 using eShopSolution.Utilities.Constants;
+using eShopSolution.ViewModels.System.Users;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -34,6 +36,7 @@ namespace eShopSolution.BackendApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            
             services.AddDbContext<eShopDBContext>(option => 
                 option.UseSqlServer(Configuration.GetConnectionString(SystemConstants.MainConnectionString)));
             
@@ -54,7 +57,8 @@ namespace eShopSolution.BackendApi
             services.AddTransient<RoleManager<AppRole>, RoleManager<AppRole>>();
             services.AddTransient<IUserService, UserService>();
 
-            services.AddControllersWithViews();
+            services.AddControllers()
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>());
             //Tạo phương thức Swagger rồi sử dụng ở bên dưới
             services.AddSwaggerGen(c => 
             {
