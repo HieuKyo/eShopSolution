@@ -1,11 +1,14 @@
 ﻿using eShopSolution.Data.Entities;
 using eShopSolution.Utilities.Exceptions;
+using eShopSolution.ViewModels.Common;
 using eShopSolution.ViewModels.System.Users;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,8 +22,11 @@ namespace eShopSolution.Application.System.Users
         private readonly RoleManager<AppRole> _roleManager;
         private readonly IConfiguration _config;
         //Để login dc thì ta cần phải injact cái thằng UserManager, SignInManager. Đây là thư viện của Identity
-        public UserService(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, 
-            RoleManager<AppRole> roleManager, IConfiguration config)
+        public UserService(
+            UserManager<AppUser> userManager, 
+            SignInManager<AppUser> signInManager, 
+            RoleManager<AppRole> roleManager, 
+            IConfiguration config)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -46,14 +52,16 @@ namespace eShopSolution.Application.System.Users
             {
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.GivenName, user.FirstName),
-                new Claim(ClaimTypes.Role, string.Join(";",roles))
+                new Claim(ClaimTypes.Role, string.Join(";",roles)),
+                new Claim(ClaimTypes.Name, request.UserName)
                 //Muốn lấy nhiều hơn cũng dc
             };
             //Sau khi có Claim rồi thì ta đi mã hoá các Claims đó 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var token = new JwtSecurityToken(_config["Token:Issuser"],
-                _config["Token:Issuser"],
+
+            var token = new JwtSecurityToken(_config["Tokens:Issuer"],
+                _config["Tokens:Issuer"],
                 claims,
                 expires: DateTime.Now.AddHours(3),
                 signingCredentials: creds);
@@ -78,6 +86,43 @@ namespace eShopSolution.Application.System.Users
                 return true;
             }
             return false;
+        }
+
+        public async Task<PagedResult<UserViewModel>> GetUsersPaging(GetUserPagingRequest request)
+        {
+            
+            var query = _userManager.Users;
+            if (!string.IsNullOrEmpty(request.Keyword))
+            {
+                //Tìm kiếm theo UserName
+                query = query.Where(x => x.UserName.Contains(request.Keyword) || x.PhoneNumber.Contains(request.Keyword));
+            }
+            //Cũng giống như bên tìm sản phẩm
+            int totalRow = await query.CountAsync();
+
+            //Giống bên Product
+
+            var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
+                .Take(request.PageSize)
+                .Select(x => new UserViewModel()
+                {
+                    //Các thuộc tính chúng ta muốn show sao
+                    Id = x.Id,
+                    Email = x.Email,
+                    PhoneNumber = x.PhoneNumber,
+                    UserName = x.UserName,
+                    FirstName = x.FirstName,
+                    LastName = x.LastName
+
+                }).ToListAsync();
+
+            //4 Select and projection
+            var pageResult = new PagedResult<UserViewModel>()
+            {
+                TotalRecord = totalRow,
+                Items = data
+            };
+            return pageResult;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using eShopSolution.WebApp.Models;
+﻿using eShopSolution.AdminApp.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -7,9 +8,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
-//Chứa toàn bộ Controller hệ thống, xủ7 lý request
-namespace eShopSolution.WebApp.Controllers
+namespace eShopSolution.AdminApp.Controllers
 {
+    //Authorize : Không được phép vào trang chủ khi chưa đăng nhập
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -21,8 +23,6 @@ namespace eShopSolution.WebApp.Controllers
 
         public IActionResult Index()
         {
-            //Lấy ra được UserName đăng nhập
-            var user = User.Identity.Name;
             return View();
         }
 

@@ -14,7 +14,7 @@ namespace eShopSolution.Application.Catalog.Products
     //Nguyên tắc đảo ngược sự phụ thuộc, không phụ thuộc trực tiếp với nhau, mà dùng cơ chế button
     //Để tiêm, truyền các thành phân phụ thuộc vào
     //Interface bắt đầu bằng I
-    public interface IManageProductService
+    public interface IProductService
     {
         //Định nghĩa các phương thức liên quan cho nó
         //Create truyền vào 1 cái DTO - Data Transfer object
@@ -42,5 +42,7 @@ namespace eShopSolution.Application.Catalog.Products
         Task<List<ProductImageViewModel>> GetListImages(int productId);
         Task<ProductImageViewModel> GetImageById(int imageId);
         Task<ProductViewModel> GetById(int productId, string languageId);
+
+        Task<PagedResult<ProductViewModel>> GetAllByCategoryId(string languageId, GetPublicProductPagingRequest request);
     }
 }
