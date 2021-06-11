@@ -36,7 +36,7 @@ namespace eShopSolution.AdminApp
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
             {
-                options.LoginPath = "/User/Login/";
+                options.LoginPath = "/Login/Index";
                 //Truy cập bị từ chối thì sẽ trở về trang Forbidden
                 options.AccessDeniedPath = "/User/Forbidden/";
             });

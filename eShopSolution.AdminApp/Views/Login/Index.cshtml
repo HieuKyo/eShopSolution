@@ -27,11 +27,11 @@
                             <div class="card shadow-lg border-0 rounded-lg mt-5">
                                 <div class="card-header"><h3 class="text-center font-weight-light my-4">Đăng nhập</h3></div>
                                 <div class="card-body">
-                                    @*Dùng Task Helper*@
-                                    <form asp-action="Login" asp-controller="User" method="post">
+                                    @*Dùng Task Helper chuyển từ Index sang Login*@
+                                    <form asp-action="Index" asp-controller="Login" method="post">
                                         <div class="form-floating mb-3">
                                             @*Bỏ các cái id và thay vào đó là asp-for="do ta dùng asp-api"
-                                              Và bỏ các for="inputPassword"
+                                                Và bỏ các for="inputPassword"
                                             *@
                                             <input class="form-control" asp-for="UserName" type="text" placeholder="Nhập tài khoản đi ba" />
                                             <label>Tài khoản</label>
@@ -44,7 +44,7 @@
                                             <input class="form-check-input" asp-for="RememberMe" type="checkbox" value="" />
                                             <label class="form-check-label"> Nhớ mật khẩu?</label>
                                         </div>
-     
+
                                         <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
                                             <a class="small" href="/User/ForgotPassword">Có nhớ mật khẩu không?</a>
                                             <button class="btn btn-primary" type="submit" href="index.html">Đăng nhập</button>

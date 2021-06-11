@@ -50,5 +50,19 @@ namespace eShopSolution.AdminApp.Services
             var users = JsonConvert.DeserializeObject<PagedResult<UserViewModel>>(body);
             return users;
         }
+
+        public async Task<bool> RegisterUser(RegisterRequest registerRequest)
+        {
+            var client = _httpClientFactory.CreateClient();
+            //"BaseAddress lúc này là https://localhost/5001" trong cái appsetting
+            client.BaseAddress = new Uri(_configuration["BaseAddress"]);
+
+            //Sign ra 1 Http Content
+            var json = JsonConvert.SerializeObject(registerRequest);
+            var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await client.PostAsync($"/api/users", httpContent);
+            return response.IsSuccessStatusCode;
+        }
     }
 }

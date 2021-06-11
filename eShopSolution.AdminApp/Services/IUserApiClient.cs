@@ -11,5 +11,7 @@ namespace eShopSolution.AdminApp.Services
         Task<string> Authenticate(LoginRequest request);
         //PageView làm việc với Api bên AdminApp.UserApiClient
         Task<PagedResult<UserViewModel>> GetUsersPagings(GetUserPagingRequest request);
+
+        Task<bool> RegisterUser(RegisterRequest registerRequest);
     }
 }
