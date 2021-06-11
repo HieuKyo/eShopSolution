@@ -18,7 +18,7 @@
     "eShopSolution.BackendApi": {
       "commandName": "Project",
       //k cần show swagger lên test nữa
-      "launchBrowser": true,
+      "launchBrowser": false,
       //Chạy 1 cái là vào swagger luôn
       "launchUrl": "swagger",
       "applicationUrl": "https://localhost:5001",

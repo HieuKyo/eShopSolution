@@ -9,6 +9,7 @@ using eShopSolution.AdminApp.Services;
 using eShopSolution.ViewModels.System.Users;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Logging;
@@ -28,9 +29,22 @@ namespace eShopSolution.AdminApp.Controllers
             _userApiClient = userApiClient;
             _configuration = configuration;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index(string keyword, int pageIndex = 1, int pageSize = 10)
         {
-            return View();
+            var sessions = HttpContext.Session.GetString("Token");
+            //Từ token này ta sẽ get 1 cái request bao gồm BearerToken, keyword
+            var request = new GetUserPagingRequest()
+            {
+                //default paramenter
+                BearerToken = sessions,
+                Keyword = keyword,
+                PageIndex = pageIndex,
+                PageSize = pageSize
+            };
+
+            //Sau đó gọi UserClient API
+            var data = await _userApiClient.GetUsersPagings(request);
+            return View(data);
         }
 
         [HttpGet]
@@ -59,6 +73,7 @@ namespace eShopSolution.AdminApp.Controllers
                 ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
                 IsPersistent = false
             };
+            HttpContext.Session.SetString("Token", token);
             //Sau đó dùng Signing httpContext
             await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
@@ -66,7 +81,7 @@ namespace eShopSolution.AdminApp.Controllers
                     authProperties
             );
             //Sau khi login thành công, => về trang chủ
-
+            
             return RedirectToAction("Index","Home");
         }
 
@@ -96,6 +111,8 @@ namespace eShopSolution.AdminApp.Controllers
         public async Task<IActionResult> Logout() 
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            //Token tồn tại 30p
+            HttpContext.Session.Remove("Token");
             //Đến controller User
             return RedirectToAction("Login", "User");
         }
