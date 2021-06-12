@@ -46,18 +46,18 @@ namespace eShopSolution.AdminApp.Controllers
                 //return View(ModelState) thì nó hiện ra lỗi luôn
                 return View(ModelState);
 
-            var token = await _userApiClient.Authenticate(request);
+            var result = await _userApiClient.Authenticate(request);
             //Sau khi đăng nhập thành công, lấy dc token rồi thì ta giải mã token ra, coi có những claim nào dc set ở bên kia
             //Sau đó chúng ta cũng set authenticate cookie = HttpContext.SignIn
             //Chuyển token này sang UserPrincipal
-            var userPrincipal = this.ValidateToken(token);
+            var userPrincipal = this.ValidateToken(result.ResultObj);
             //Rồi chuyển sang 1 tập Properties của Cookie
             var authProperties = new AuthenticationProperties
             {
                 ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
                 IsPersistent = false
             };
-            HttpContext.Session.SetString("Token", token);
+            HttpContext.Session.SetString("Token", result.ResultObj);
             //Sau đó dùng Signing httpContext
             await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
