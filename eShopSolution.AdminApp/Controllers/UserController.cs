@@ -29,7 +29,7 @@ namespace eShopSolution.AdminApp.Controllers
             _userApiClient = userApiClient;
             _configuration = configuration;
         }
-        public async Task<IActionResult> Index(string keyword, int pageIndex = 1, int pageSize = 10)
+        public async Task<IActionResult> Index(string keyword, int pageIndex = 1, int pageSize = 2)
         {
             //Từ token này ta sẽ get 1 cái request bao gồm BearerToken, keyword
             var request = new GetUserPagingRequest()
@@ -112,5 +112,15 @@ namespace eShopSolution.AdminApp.Controllers
             ModelState.AddModelError("", result.Message);
             return View(request);
         }
+
+        //Detail
+        [HttpGet]
+        public async Task<IActionResult> Details(Guid id)
+        {
+            var result = await _userApiClient.GetById(id);
+            //Trả về result của Id. ResultObj là 1 kiểu result View Model
+            return View(result.ResultObj);
+        }
+
     }
 }
