@@ -29,7 +29,7 @@ namespace eShopSolution.AdminApp.Controllers
             _userApiClient = userApiClient;
             _configuration = configuration;
         }
-        public async Task<IActionResult> Index(string keyword, int pageIndex = 1, int pageSize = 2)
+        public async Task<IActionResult> Index(string keyword, int pageIndex = 1, int pageSize = 5)
         {
             //Từ token này ta sẽ get 1 cái request bao gồm BearerToken, keyword
             var request = new GetUserPagingRequest()
@@ -122,5 +122,29 @@ namespace eShopSolution.AdminApp.Controllers
             return View(result.ResultObj);
         }
 
+        [HttpGet]
+        public IActionResult Delete(Guid id)
+        {
+
+            return View(new UserDeleteRequest()
+            {
+                Id = id
+            }
+            );
+        }
+        //Trả về 1 view bình thường
+        [HttpPost]
+        public async Task<IActionResult> Delete(UserDeleteRequest request)
+        {
+            if (!ModelState.IsValid)
+                return View();
+            var result = await _userApiClient.Delete(request.Id);
+            //Nếu có đăng ký user thì trả về Index
+            if (result.IsSuccessed)
+                return RedirectToAction("Index");
+            //Không thì trả về View Bình thường thôi
+            ModelState.AddModelError("", result.Message);
+            return View(request);
+        }
     }
 }

@@ -188,5 +188,18 @@ namespace eShopSolution.Application.System.Users
             //Sau khi thành công sẽ trả về 1 cái token dạng string
             return new ApiSuccessResult<string>(new JwtSecurityTokenHandler().WriteToken(token));
         }
+
+        public async Task<ApiResult<bool>> Delete(Guid id)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            if (user == null)
+            {
+                return new ApiErrorResult<bool>("User không tồn tại");
+            }
+            var result = await _userManager.DeleteAsync(user);
+            if(result.Succeeded)
+                return new ApiSuccessResult<bool>();
+            return new ApiErrorResult<bool>("xoá không thành công");
+        }
     }
 }

@@ -43,6 +43,22 @@ namespace eShopSolution.AdminApp.Services
 
         }
 
+        public async Task<ApiResult<bool>> Delete(Guid id)
+        {
+            var sessions = _httpContextAccessor.HttpContext.Session.GetString("Token");
+            var client = _httpClientFactory.CreateClient();
+            //"BaseAddress lúc này là https://localhost/5001" trong cái appsetting
+            client.BaseAddress = new Uri(_configuration["BaseAddress"]);
+            //Dùng thằng này trong Controller BackendApi
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
+            var response = await client.DeleteAsync($"/api/users/{id}");
+            //Do là binding theo FromQuery nên đúng query là nó bind ra
+            var body = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode)
+                return JsonConvert.DeserializeObject<ApiSuccessResult<bool>>(body);
+            return JsonConvert.DeserializeObject<ApiErrorResult<bool>>(body);
+        }
+
         public async Task<ApiResult<UserViewModel>> GetById(Guid id)
         {
             var sessions = _httpContextAccessor.HttpContext.Session.GetString("Token");

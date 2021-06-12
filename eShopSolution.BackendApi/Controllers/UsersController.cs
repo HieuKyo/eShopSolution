@@ -88,5 +88,20 @@ namespace eShopSolution.BackendApi.Controllers
             var user = await _userService.GetById(id);
             return Ok(user);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var result = await _userService.Delete(id);
+            return Ok(result);
+        }
     }
 }
+/*
+ * eShopSolution.AdminApp.Services.UserApiClient.UpdateUser(Guid id, UserUpdateRequest request) in UserApiClient.cs
++
+            return JsonConvert.DeserializeObject<ApiErrorResult<bool>>(result);
+eShopSolution.AdminApp.Controllers.UserController.Edit(UserUpdateRequest request) in UserController.cs
++
+            var result = await _userApiClient.UpdateUser(request.Id, request);
+*/
