@@ -34,7 +34,6 @@ namespace eShopSolution.Application.System.Users
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
-
             _config = config;
         }
 
@@ -93,7 +92,6 @@ namespace eShopSolution.Application.System.Users
 
         public async Task<ApiResult<bool>> Update(Guid id, UserUpdateRequest request)
         {
-            //AnyAsync Có bất cứ thằng nào có điều kiện 
             if (await _userManager.Users.AnyAsync(x => x.Email == request.Email && x.Id != id))
             {
                 return new ApiErrorResult<bool>("Emai đã tồn tại");
@@ -153,7 +151,7 @@ namespace eShopSolution.Application.System.Users
             return new ApiSuccessResult<PagedResult<UserViewModel>>(pageResult);
         }
 
-        public async Task<ApiResult<string>> Authencate(LoginRequest request)
+        public async Task<ApiResult<string>>Authencate(LoginRequest request)
         {
             var user = await _userManager.FindByNameAsync(request.UserName);
             //Nếu k tồn tại User
@@ -164,7 +162,7 @@ namespace eShopSolution.Application.System.Users
             var result = await _signInManager.PasswordSignInAsync(user, request.Password, request.RememberMe, true);
             if (!result.Succeeded)
             {
-                return null;
+                return new ApiErrorResult<string>("Đăng nhập không đúng");
             }
             var roles = await _userManager.GetRolesAsync(user);
             //Sau khi đăng nhập thành công rồi, thì mình tạo ra cái claim
@@ -199,7 +197,7 @@ namespace eShopSolution.Application.System.Users
             var result = await _userManager.DeleteAsync(user);
             if(result.Succeeded)
                 return new ApiSuccessResult<bool>();
-            return new ApiErrorResult<bool>("xoá không thành công");
+            return new ApiErrorResult<bool>("Xoá không thành công");
         }
     }
 }
