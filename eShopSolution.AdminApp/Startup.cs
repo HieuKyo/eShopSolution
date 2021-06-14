@@ -4,6 +4,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,7 +37,7 @@ namespace eShopSolution.AdminApp
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
             {
-                options.LoginPath = "/User/Login/";
+                options.LoginPath = "/Login/Index";
                 //Truy cập bị từ chối thì sẽ trở về trang Forbidden
                 options.AccessDeniedPath = "/User/Forbidden/";
             });
@@ -49,7 +50,7 @@ namespace eShopSolution.AdminApp
                 //Sesstion tồn tại trong vòng 30p
                 option.IdleTimeout = TimeSpan.FromMinutes(30);
             });
-
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<IUserApiClient, UserApiClient>();
 
             IMvcBuilder builder = services.AddRazorPages();

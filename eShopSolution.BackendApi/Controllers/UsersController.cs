@@ -1,11 +1,8 @@
 ﻿using eShopSolution.Application.System.Users;
 using eShopSolution.ViewModels.System.Users;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace eShopSolution.BackendApi.Controllers
@@ -31,14 +28,15 @@ namespace eShopSolution.BackendApi.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var resultToken = await _userService.Authencate(request);
-            if(string.IsNullOrEmpty(resultToken))
+            var result = await _userService.Authencate(request);
+            //Check result Object vì token sẽ dc rán vào đây
+            if(string.IsNullOrEmpty(result.ResultObj))
             {
-                return BadRequest("UserName or password is incorrect!");
+                return BadRequest(result);
             }
             
             //Trả về luôn 1 token để dễ lấy
-            return Ok(resultToken);
+            return Ok(result);
         }
 
         //Mặc định Post đã là Rigister rồi, nên k cần ("register")
@@ -48,13 +46,30 @@ namespace eShopSolution.BackendApi.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+           
 
             var result = await _userService.Register(request);
-            if (!result)
+            if (!result.IsSuccessed)
             {
-                return BadRequest("Register is not successful.");
+                return BadRequest(result);
             }
-            return Ok();
+            return Ok(result);
+        }
+
+        //Put: https://localhost/api/users/id
+        //Update cũng phải theo id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(Guid id, [FromBody] UserUpdateRequest request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _userService.Update(id, request);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
         }
 
         //http://localhost/api/users/paging?pageIndex=1&pageSize=10&keyword=
@@ -66,5 +81,27 @@ namespace eShopSolution.BackendApi.Controllers
             var products = await _userService.GetUsersPaging(request);
             return Ok(products);
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(Guid id)
+        {
+            var user = await _userService.GetById(id);
+            return Ok(user);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var result = await _userService.Delete(id);
+            return Ok(result);
+        }
     }
 }
+/*
+ * eShopSolution.AdminApp.Services.UserApiClient.UpdateUser(Guid id, UserUpdateRequest request) in UserApiClient.cs
++
+            return JsonConvert.DeserializeObject<ApiErrorResult<bool>>(result);
+eShopSolution.AdminApp.Controllers.UserController.Edit(UserUpdateRequest request) in UserController.cs
++
+            var result = await _userApiClient.UpdateUser(request.Id, request);
+*/

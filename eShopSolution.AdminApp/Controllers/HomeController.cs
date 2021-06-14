@@ -11,8 +11,7 @@ using System.Threading.Tasks;
 namespace eShopSolution.AdminApp.Controllers
 {
     //Authorize : Không được phép vào trang chủ khi chưa đăng nhập
-    [Authorize]
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
 
