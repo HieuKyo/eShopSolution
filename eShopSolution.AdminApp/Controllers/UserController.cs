@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 using eShopSolution.AdminApp.Services;
 using eShopSolution.ViewModels.System.Users;
@@ -12,8 +7,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Logging;
-using Microsoft.IdentityModel.Tokens;
 
 
 namespace eShopSolution.AdminApp.Controllers
@@ -42,6 +35,8 @@ namespace eShopSolution.AdminApp.Controllers
 
             //Sau đó gọi UserClient API
             var data = await _userApiClient.GetUsersPagings(request);
+            //Truyền về 1 cái ViewBag để lưu giá trị đã tìm trên thanh search
+            ViewBag.Keyword = keyword;
             return View(data.ResultObj);
         }
 
@@ -51,7 +46,7 @@ namespace eShopSolution.AdminApp.Controllers
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             HttpContext.Session.Remove("Token");
             //Đến controller User
-            return RedirectToAction("Login", "User");
+            return RedirectToAction("Index", "Login");
         }
 
         [HttpGet]

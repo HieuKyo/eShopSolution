@@ -29,6 +29,7 @@
                                 <div class="card-body">
                                     @*Dùng Task Helper chuyển từ Index sang Login*@
                                     <form asp-action="Index" asp-controller="Login" method="post">
+                                        <div asp-validation-summary="All" class="danger"></div>
                                         <div class="form-floating mb-3">
                                             @*Bỏ các cái id và thay vào đó là asp-for="do ta dùng asp-api"
                                                 Và bỏ các for="inputPassword"
