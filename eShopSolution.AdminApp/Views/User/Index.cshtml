@@ -14,9 +14,33 @@
         <li class="breadcrumb-item active">Danh sách người dùng!</li>
     </ol>
 
-    <div class="card mb-4">
+    <div class="card mb-12">
         <div class="card-header">
-            <a class="btn btn-success" asp-action="Create" asp-controller="User">Tạo mới</a>
+            <div class="row">
+                <div class="col-md-6 col-xs-12">
+                    <a class="btn btn-success" asp-action="Create" asp-controller="User">Tạo mới</a>
+                </div>
+                @*Method get, truyền tham số trên query*@
+                @*Col là column, md-6 là medium chia thành 2 cột | xs-12 là nếu màn hình nhỏ thì chia thành 1 cột thôi *@
+                <div class="col-md-6 col-xs-12">
+                    @*Search qua phương thưc GetUsersPaging trong Application.System.Users.UserService search theo username với phone*@
+                    <form asp-action="Index" method="get">
+                        @*Chia cột tiếp tổng = 12*@
+                        <div class="row">
+                            <div class="col-md-9">
+                                @*ViewBag lưu giá trị mình đã search trên đó*@
+                                <input type="text" value ="@ViewBag.Keyword" name="keyword" class="form-control" />
+                            </div>
+                            <div class="col-md-3">
+                                <button type="submit" class="btn btn-primary">Tìm</button>
+                                @*onclick="window.location.href='/User/Index' khi click vào sẽ trả về trang href*@
+                                <button type="button" onclick="window.location.href='/User/Index'" class="btn btn-dark">Rest</button>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
         <div class="card-body">
             <table class="table table-bordered">

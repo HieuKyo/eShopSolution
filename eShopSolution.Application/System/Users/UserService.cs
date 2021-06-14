@@ -119,7 +119,7 @@ namespace eShopSolution.Application.System.Users
             {
                 //Tìm kiếm theo UserName
                 query = query.Where(x => x.UserName.Contains(request.Keyword) 
-                    || x.PhoneNumber.Contains(request.Keyword));
+                    || x.PhoneNumber.Contains(request.Keyword) || x.Email.Contains(request.Keyword));
             }
             //Cũng giống như bên tìm sản phẩm
             int totalRow = await query.CountAsync();
@@ -156,7 +156,7 @@ namespace eShopSolution.Application.System.Users
             var user = await _userManager.FindByNameAsync(request.UserName);
             //Nếu k tồn tại User
             if (user == null)
-                throw new eShopException($"Cannot find username {user}");
+                return new ApiErrorResult<string>("Tài khoản không tồn tại");
             //Nếu trường hợp có thì truyền vào AppUser
             //Login mà sai nhiều quá thì khoá tài khoản logoutOnFallen(true)
             var result = await _signInManager.PasswordSignInAsync(user, request.Password, request.RememberMe, true);

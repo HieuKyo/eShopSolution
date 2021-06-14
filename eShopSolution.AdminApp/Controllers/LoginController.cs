@@ -47,6 +47,11 @@ namespace eShopSolution.AdminApp.Controllers
                 return View(ModelState);
 
             var result = await _userApiClient.Authenticate(request);
+            if(result.ResultObj == null)
+            {
+                ModelState.AddModelError("", result.Message);
+                return View();
+            }
             //Sau khi đăng nhập thành công, lấy dc token rồi thì ta giải mã token ra, coi có những claim nào dc set ở bên kia
             //Sau đó chúng ta cũng set authenticate cookie = HttpContext.SignIn
             //Chuyển token này sang UserPrincipal
